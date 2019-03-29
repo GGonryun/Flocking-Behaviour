@@ -5,9 +5,7 @@ public class Boid : MonoBehaviour
     [SerializeField]
     private FlockController flockController;
 
-    //The modified direction for the boid.
     private Vector3 targetDirection;
-    //The Boid's current direction.
     private Vector3 direction;
 
     public FlockController FlockController
@@ -29,7 +27,7 @@ public class Boid : MonoBehaviour
 
     private void Update()
     {
-        targetDirection = FlockController.Flock(this, transform.localPosition, direction);
+        targetDirection = FlockController.Flock(this);
         if (targetDirection == Vector3.zero)
         {
             return;
