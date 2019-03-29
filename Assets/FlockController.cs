@@ -18,34 +18,38 @@ public class FlockController : MonoBehaviour
     [SerializeField] private float spawnRadius = 3.0f;
 
     [Header("Target Data")]
-    [SerializeField]
-    public Transform target;
-
-
-    public List<Boid> flockList = new List<Boid>();
+    [SerializeField] private Transform target;
+    [SerializeField] private List<Boid> flockList = new List<Boid>();
 
     public float SpeedModifier { get { return speedModifier; } }
 
     private void Awake()
     {
-        Vector3 spawnLocation = Vector3.zero;
         flockList = new List<Boid>(flockSize);
-        for (int i = 0; i < flockSize; i++)
+
+        CreateBoid(flockSize);
+    }
+
+    private void CreateBoid(int size)
+    {
+        for (int i = 0; i < size; i++)
         {
-            spawnLocation = Random.insideUnitSphere * spawnRadius + transform.position;
+            Vector3 spawnLocation = Random.insideUnitSphere * spawnRadius + transform.position;
             Boid boid = Instantiate(prefab, spawnLocation, transform.rotation) as Boid;
 
             boid.FlockController = this;
             flockList.Add(boid);
         }
+
     }
 
-    private Vector3 flockCenter;
-    private Vector3 flockDirection;
-    private Vector3 targetDirection;
-    private Vector3 boidSeparation;
+
     public Vector3 Flock(Boid boid)
     {
+        if (target == null)
+        {
+            return Vector3.zero;
+        }
         flockDirection = Vector3.zero;
         flockCenter = Vector3.zero;
         targetDirection = Vector3.zero;
@@ -58,8 +62,8 @@ public class FlockController : MonoBehaviour
             if (neighbor != boid)
             {
                 flockDirection += neighbor.Direction;
-                flockCenter += neighbor.transform.localPosition;
-                boidSeparation += neighbor.transform.localPosition - boidPosition;
+                flockCenter += neighbor.transform.position;
+                boidSeparation += neighbor.transform.position - boidPosition;
                 boidSeparation *= -1;
             }
         }
@@ -67,7 +71,7 @@ public class FlockController : MonoBehaviour
         //Alignment. The avereage direction of all boids.
         flockDirection /= flockSize;
         flockDirection = flockDirection.normalized * alignmentWeight;
-        
+
         //Cohesion. The centroid of the flock.
         flockCenter /= flockSize;
         flockCenter = flockCenter.normalized * cohesionWeight;
@@ -77,10 +81,14 @@ public class FlockController : MonoBehaviour
         boidSeparation = boidSeparation.normalized * separationWeight;
 
         //Direction vector to the target of the flock.
-        targetDirection = target.localPosition - boidPosition;
+        targetDirection = target.position - boidPosition;
         targetDirection = targetDirection * followWeight;
 
         return flockDirection + flockCenter + boidSeparation + targetDirection;
     }
 
+    private Vector3 flockCenter;
+    private Vector3 flockDirection;
+    private Vector3 targetDirection;
+    private Vector3 boidSeparation;
 }
