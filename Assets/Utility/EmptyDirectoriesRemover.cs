@@ -17,7 +17,8 @@ using System.IO;
 
 namespace IdeaPlusPlus.Unity
 {
-	class EmptyDirectoriesRemover : AssetPostprocessor
+#if UNITY_EDITOR
+    class EmptyDirectoriesRemover : AssetPostprocessor
 	{
 		const string AssetsString = "Assets";
 
@@ -62,5 +63,5 @@ namespace IdeaPlusPlus.Unity
 				return Path.Combine(Application.dataPath, assetPath.Substring(AssetsString.Length + 1));
 		}
 	}
+#endif
 }
-
