@@ -39,13 +39,13 @@ public class CircleWaypoints : IWaypointContainer
         _waypoints = new Queue<Transform>(_pointCount);
         //x = r*cosθ
         //y = r*sinθ
-        int i = 0;
-        for (float theta = 0; theta <= 360f; theta += step)
+        float theta = 0; 
+        for (int i = 0; i < _pointCount; i++, theta += step)
         {
             float x = radius * Mathf.Cos(theta);
             float z = radius * Mathf.Sin(theta);
             GameObject go = GameObject.Instantiate(_prefab, new Vector3(x, 0, z), Quaternion.identity, _folder);
-            go.name = $"Circle Point #{i++}";
+            go.name = $"Circle Point #{i}";
             _waypoints.Enqueue(go.transform);
         }
     }

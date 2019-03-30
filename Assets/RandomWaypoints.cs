@@ -22,10 +22,6 @@ public class RandomWaypoints : IWaypointContainer
 
         if (target == null || FlockController.WithinRange(target, flock))
         {
-            if(target != null)
-            {
-                Debug.Log($"Target: {target.position}, flock: {flock.Center}, distance: {Mathf.Abs(Vector3.Distance(target.position, flock.Center))}");
-            }
             int index = Random.Range(0, _waypoints.Count);
             target = _waypoints[index];
         }
