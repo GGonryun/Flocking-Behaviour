@@ -10,6 +10,10 @@ public class Targeter : MonoBehaviour
     [SerializeField] private Transform pointFolder;
     [SerializeField] private Transform leader;
     [SerializeField] private TargetingMode mode;
+    public TargetingMode Mode
+    {
+        set => mode = value;
+    }
     [SerializeField] private int pointCount;
     [SerializeField] private float circleRadius;
     [SerializeField] private float randomBounds;

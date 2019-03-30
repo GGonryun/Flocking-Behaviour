@@ -7,13 +7,14 @@ using UnityEngine.UI;
 public class Adjuster : MonoBehaviour
 {
     [SerializeField] FlockController controller;
+    [SerializeField] Targeter targeter;
     [SerializeField] Slider sizeSlider;
     [SerializeField] Slider speedSlider;
     [SerializeField] Slider alignmentSlider;
     [SerializeField] Slider cohesionSlider;
     [SerializeField] Slider separationSlider;
     [SerializeField] Slider followSlider;
-    [SerializeField] 
+    [SerializeField] Dropdown behaviourDropdown;
 
     public void Awake()
     {
@@ -23,6 +24,13 @@ public class Adjuster : MonoBehaviour
         cohesionSlider.onValueChanged.AddListener(SetCohesion);
         separationSlider.onValueChanged.AddListener(SetSeparation);
         followSlider.onValueChanged.AddListener(SetFollow);
+        behaviourDropdown.onValueChanged.AddListener(SetBehaviour);
+    }
+
+    //The values in the drop down menu should match the enum in the Targeter.cs script.
+    private void SetBehaviour(int behaviour)
+    {
+        targeter.Mode = (TargetingMode)behaviour;
     }
 
     private void ChangeSize(float size)
@@ -30,7 +38,7 @@ public class Adjuster : MonoBehaviour
         controller.SetFlockSize((int)Math.Floor(size));
     }
 
-    public void SetSpeed(float speed)
+    private void SetSpeed(float speed)
     {
         controller.SpeedModifier = speed;
     }
