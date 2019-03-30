@@ -13,9 +13,9 @@ public class FlockController : MonoBehaviour
     public float AlignmentWeight { set => alignmentWeight = value; }
     [SerializeField] private float cohesionWeight = 1;
     public float CohesionWeight { set => cohesionWeight = value; }
-    [SerializeField] private float separationWeight = 1;
-    public float SeparationWeight { set => separationWeight = value; }
-    [SerializeField] private float followWeight = 5;
+    [SerializeField] private float separationWeight = 5;
+    public float SeparationWeight { get => separationWeight; set => separationWeight = value; }
+    [SerializeField] private float followWeight = 1;
     public float FollowWeight { set => followWeight = value; }
 
     [Header("Boid Data")]
@@ -24,18 +24,37 @@ public class FlockController : MonoBehaviour
 
     [Header("Target Data")]
     [SerializeField] private Transform target;
+    public Transform Target { set => target = value; }
     [SerializeField] private List<Boid> flockList = new List<Boid>();
 
+    public Vector3 Center { get => CalculateCenter(); }
+
+    public static bool WithinRange(Transform target, FlockController flock) => Mathf.Abs(Vector3.Distance(target.position, flock.Center)) < Mathf.Abs(1 * flock.SeparationWeight);
 
     private void Awake()
     {
         SetFlockSize(flockSize);
     }
 
+    private Vector3 CalculateCenter()
+    {
+        if (flockSize > 0)
+        {
+            Vector3 centerPoint = Vector3.zero;
+            foreach (var boid in flockList)
+            {
+                centerPoint += boid.transform.position;
+            }
+            centerPoint /= flockList.Count;
+            return centerPoint;
+        }
+        return Vector3.zero;
+    }
+
     public void SetFlockSize(int size)
     {
         int delta = size - flockList.Count;
-        if(delta > 0)
+        if (delta > 0)
         {
             for (int i = 0; i < delta; i++)
             {
@@ -48,7 +67,7 @@ public class FlockController : MonoBehaviour
         }
         else
         {
-            for(int i = delta; i < 0; i++)
+            for (int i = delta; i < 0; i++)
             {
                 int index = Random.Range(0, flockList.Count);
                 Boid boid = flockList[index];
@@ -56,7 +75,7 @@ public class FlockController : MonoBehaviour
                 flockList.RemoveAt(index);
             }
         }
-        
+
 
     }
 

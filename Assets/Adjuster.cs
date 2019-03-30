@@ -13,6 +13,7 @@ public class Adjuster : MonoBehaviour
     [SerializeField] Slider cohesionSlider;
     [SerializeField] Slider separationSlider;
     [SerializeField] Slider followSlider;
+    [SerializeField] 
 
     public void Awake()
     {
