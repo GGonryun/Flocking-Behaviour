@@ -35,12 +35,18 @@ public class Targeter : MonoBehaviour
     float refreshRate = 1f;
     float currentTime = 0f;
     Transform target = null;
+    TargetingMode previous;
     private void FixedUpdate()
     {
         if(currentTime > refreshRate)
         {
+            if(previous != mode)
+            {
+                flock.Target = target = null;
+            }
             currentTime -= refreshRate;
             flock.Target = target = points[mode].GetTarget(target, flock);
+            previous = mode;
         }
         currentTime += Time.deltaTime;
     }
