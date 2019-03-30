@@ -8,10 +8,15 @@ public class FlockController : MonoBehaviour
     [Header("Flock Data")]
     [SerializeField] private int flockSize = 20;
     [SerializeField] private float speedModifier = 5;
+    public float SpeedModifier { get => speedModifier; set => speedModifier = value; }
     [SerializeField] private float alignmentWeight = 1;
+    public float AlignmentWeight { set => alignmentWeight = value; }
     [SerializeField] private float cohesionWeight = 1;
+    public float CohesionWeight { set => cohesionWeight = value; }
     [SerializeField] private float separationWeight = 1;
+    public float SeparationWeight { set => separationWeight = value; }
     [SerializeField] private float followWeight = 5;
+    public float FollowWeight { set => followWeight = value; }
 
     [Header("Boid Data")]
     [SerializeField] private Boid prefab;
@@ -21,28 +26,39 @@ public class FlockController : MonoBehaviour
     [SerializeField] private Transform target;
     [SerializeField] private List<Boid> flockList = new List<Boid>();
 
-    public float SpeedModifier { get { return speedModifier; } }
 
     private void Awake()
     {
-        flockList = new List<Boid>(flockSize);
-
-        CreateBoid(flockSize);
+        SetFlockSize(flockSize);
     }
 
-    private void CreateBoid(int size)
+    public void SetFlockSize(int size)
     {
-        for (int i = 0; i < size; i++)
+        int delta = size - flockList.Count;
+        if(delta > 0)
         {
-            Vector3 spawnLocation = Random.insideUnitSphere * spawnRadius + transform.position;
-            Boid boid = Instantiate(prefab, spawnLocation, transform.rotation) as Boid;
+            for (int i = 0; i < delta; i++)
+            {
+                Vector3 spawnLocation = Random.insideUnitSphere * spawnRadius + transform.position;
+                Boid boid = Instantiate(prefab, spawnLocation, transform.rotation) as Boid;
 
-            boid.FlockController = this;
-            flockList.Add(boid);
+                boid.FlockController = this;
+                flockList.Add(boid);
+            }
         }
+        else
+        {
+            for(int i = delta; i < 0; i++)
+            {
+                int index = Random.Range(0, flockList.Count);
+                Boid boid = flockList[index];
+                Destroy(boid.gameObject);
+                flockList.RemoveAt(index);
+            }
+        }
+        
 
     }
-
 
     public Vector3 Flock(Boid boid)
     {
