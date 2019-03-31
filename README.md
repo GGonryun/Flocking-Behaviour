@@ -8,6 +8,7 @@ Fall 2019 CS-596 school project made to display the various types of AI flocking
 - \**No behaviour is technically a behaviour!*
 ##### Follow the leader
 - Use QWEASD to move the leader around the school.
+
 |Control|Direction|
 |:-:|:-:|
 | Q & E | Up & Down |
